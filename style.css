@@ -1,0 +1,23 @@
+body{
+    font-family: sans-serif;
+}
+
+#log{
+    margin-top: 50px;
+    margin-left: 10px;
+}
+
+#log div{
+    margin-top: 10px;
+}
+
+#status h4{
+    margin-bottom: 5px;
+}
+.check-type{
+    display: flex;
+    font-size: 1.5rem;
+}
+.check-type>div{
+    margin: 30px;
+}
