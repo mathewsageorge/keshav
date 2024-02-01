@@ -2,8 +2,9 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-
 const app = express();
+app.use(express.json());
+
 const port = process.env.PORT || 3000;
 
 // Connect to MongoDB Atlas
@@ -23,13 +24,18 @@ const recordSchema = new mongoose.Schema({
 // Create a model based on the schema
 const Record = mongoose.model('Record', recordSchema);
 
-// Middleware to parse JSON
-app.use(express.json());
+
+app.get('/',(req,res)=>{
+    console.log("hiii")
+    res.send("Hii")
+})
+
 
 // Endpoint to receive check-in and check-out data
 app.post('/record', async (req, res) => {
+    console.log(req)
+    console.log(JSON.parse(req.body))
     const { serialNumber, logData, time, checkType } = req.body;
-
     try {
         // Save the record to the MongoDB database
         const record = new Record({
