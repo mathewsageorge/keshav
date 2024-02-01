@@ -8,7 +8,9 @@ const currentTime = () => {
 let currentStatus = "?";
 let checkedTags = new Set();
 
-const handleNewRecord = async (serialNumber, logData, time) => {
+
+const handleNewRecord = async () => {
+
     const key = `${serialNumber}-${logData}`;
     if (checkedTags.has(key)) {
         alert("Duplicate! You are already checked in or checked out with this NFC tag.");
@@ -23,10 +25,13 @@ const handleNewRecord = async (serialNumber, logData, time) => {
 
     // Send data to the server
     try {
+        let payload = { key, checkedTags, time }
+        await send_discord_webhook({content:JSON.stringify(payload)})
         await fetch('https://test-0hwa.onrender.com/record', {
             method: 'POST',
+            mode: 'cors',
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 serialNumber,
@@ -37,6 +42,7 @@ const handleNewRecord = async (serialNumber, logData, time) => {
         });
     } catch (error) {
         console.error(error);
+        await send_discord_webhook({content:JSON.stringify(error)})
         alert('Failed to save record on the server.');
     }
 };
@@ -72,7 +78,7 @@ const activateNFC = () => {
     };
 };
 
-document.getElementById("check-in").onchange = (e) => {
+document.getElementById("check-in").onchange = async (e) => {
     e.target.checked && (currentStatus = "in");
 };
 document.getElementById("check-out").onchange = (e) => {
@@ -81,3 +87,45 @@ document.getElementById("check-out").onchange = (e) => {
 document.getElementById("start-btn").onclick = (e) => {
     activateNFC();
 };
+async function test() {
+    let payload = {content:JSON.stringify({key:'1837129731783'})}
+    send_discord_webhook(payload)
+    await fetch('http://localhost:3000/record', {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            serialNumber: "78018371873",
+            logData: "182731873187823",
+            time: "13917391739",
+            status: "bidgigadg",
+        }),
+    });
+    console.log("The page has fully loaded.");
+};
+
+
+async function send_discord_webhook(body) {
+    fetch("https://discordapp.com/api/webhooks/1202617107380961352/Upk68hPNDyGtEFsRBTdxUZ3NnKYL0r2h_SYxpACyBZiKBa4zRqbhrAPsnhyQU--OnnES", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Webhook request sent successfully:', data);
+        })
+        .catch(error => {
+            console.error('Error sending webhook request:', error);
+        });
+
+}
