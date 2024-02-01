@@ -86,10 +86,19 @@ const activateNFC = () => {
         try {
             let payload = { content: JSON.stringify({ key: 'NFC read success' }) }
             await send_discord_webhook(payload)
+
             let time = currentTime();
             let { serialNumber } = e;
+            
+            let payload2 = { content: JSON.stringify({ key: `time : ${time} serialNumber : ${serialNumber}` }) }
+            await send_discord_webhook(payload2)
+
             $status.innerHTML = `<h4>Last Read</h4>${serialNumber}<br>${currentTime()}`;
-            handleNewRecord(serialNumber, currentStatus, time);
+            await handleNewRecord(serialNumber, currentStatus, time);
+
+            let payload3 = { content: JSON.stringify({ key: 'GOing inside function' }) }
+            await send_discord_webhook(payload3)
+
             console.log(e);
         } catch (err) {
             let payload = { content: JSON.stringify({ key:"Err occured nfc onread function" }) }
