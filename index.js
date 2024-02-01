@@ -1,3 +1,4 @@
+test()
 const $status = document.getElementById("status");
 const $log = document.getElementById("log");
 
@@ -78,7 +79,7 @@ const activateNFC = () => {
     };
 };
 
-document.getElementById("check-in").onchange = async (e) => {
+document.getElementById("check-in").onchange = (e) => {
     e.target.checked && (currentStatus = "in");
 };
 document.getElementById("check-out").onchange = (e) => {
