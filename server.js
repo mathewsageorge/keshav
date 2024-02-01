@@ -7,10 +7,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Connect to MongoDB Atlas
-mongoose.connect('mongodb+srv://mathewsgeorge202:ansu@cluster0.ylyaonw.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://mathewsgeorge202:ansu@cluster0.ylyaonw.mongodb.net/', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-});
+}).then((response) => { console.log("Mongo connected") });
 
 // Create a schema for the check-in and check-out records
 const recordSchema = new mongoose.Schema({
