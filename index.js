@@ -23,7 +23,7 @@ const handleNewRecord = async (serialNumber, logData, time) => {
 
     // Send data to the server
     try {
-        await fetch('http://localhost:3000/record', {
+        await fetch('https://test-0hwa.onrender.com/record', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
