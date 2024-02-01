@@ -1,3 +1,4 @@
+test()
 const $status = document.getElementById("status");
 const $log = document.getElementById("log");
 
