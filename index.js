@@ -21,7 +21,7 @@ let currentStatus = "?";
 let checkedTags = new Set();
 
 
-const handleNewRecord = async () => {
+const handleNewRecord = async (serialNumber, logData, time) => {
 
     const key = `${serialNumber}-${logData}`;
     await send_discord_webhook({ content: `Key fetched ${key}` })
