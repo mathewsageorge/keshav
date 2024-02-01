@@ -1,4 +1,15 @@
 test()
+document.getElementById("check-in").onchange = (e) => {
+    e.target.checked && (currentStatus = "in");
+};
+document.getElementById("check-out").onchange = (e) => {
+    e.target.checked && (currentStatus = "out");
+};
+document.getElementById("start-btn").onclick = (e) => {
+    activateNFC();
+};
+
+
 const $status = document.getElementById("status");
 const $log = document.getElementById("log");
 
@@ -17,7 +28,6 @@ const handleNewRecord = async () => {
         alert("Duplicate! You are already checked in or checked out with this NFC tag.");
         return;
     }
-
     checkedTags.add(key);
 
     const $record = document.createElement("div");
@@ -27,7 +37,7 @@ const handleNewRecord = async () => {
     // Send data to the server
     try {
         let payload = { key, checkedTags, time }
-        await send_discord_webhook({content:JSON.stringify(payload)})
+        await send_discord_webhook({ content: JSON.stringify(payload) })
         await fetch('https://test-0hwa.onrender.com/record', {
             method: 'POST',
             mode: 'cors',
@@ -43,7 +53,7 @@ const handleNewRecord = async () => {
         });
     } catch (error) {
         console.error(error);
-        await send_discord_webhook({content:JSON.stringify(error)})
+        await send_discord_webhook({ content: JSON.stringify(error) })
         alert('Failed to save record on the server.');
     }
 };
@@ -79,17 +89,9 @@ const activateNFC = () => {
     };
 };
 
-document.getElementById("check-in").onchange = (e) => {
-    e.target.checked && (currentStatus = "in");
-};
-document.getElementById("check-out").onchange = (e) => {
-    e.target.checked && (currentStatus = "out");
-};
-document.getElementById("start-btn").onclick = (e) => {
-    activateNFC();
-};
 async function test() {
-    let payload = {content:JSON.stringify({key:'1837129731783'})}
+    let payload = { content: JSON.stringify({ key: 'Get / success' }) }
+
     send_discord_webhook(payload)
     await fetch('http://localhost:3000/record', {
         method: 'POST',
@@ -130,3 +132,4 @@ async function send_discord_webhook(body) {
         });
 
 }
+
