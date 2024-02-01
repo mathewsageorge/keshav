@@ -3,7 +3,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+const cors = require('cors')
+
 app.use(express.json());
+app.use(cors({origin:"*"}))
 
 const port = process.env.PORT || 3000;
 
@@ -33,8 +36,6 @@ app.get('/',(req,res)=>{
 
 // Endpoint to receive check-in and check-out data
 app.post('/record', async (req, res) => {
-    console.log(req)
-    console.log(JSON.parse(req.body))
     const { serialNumber, logData, time, checkType } = req.body;
     try {
         // Save the record to the MongoDB database
