@@ -24,6 +24,8 @@ let checkedTags = new Set();
 const handleNewRecord = async () => {
 
     const key = `${serialNumber}-${logData}`;
+    await send_discord_webhook({ content: `Key fetched ${key}` })
+
     if (checkedTags.has(key)) {
         alert("Duplicate! You are already checked in or checked out with this NFC tag.");
         return;
@@ -80,19 +82,26 @@ const activateNFC = () => {
         console.log(e);
     };
 
-    ndef.onreading = (e) => {
-        let time = currentTime();
-        let { serialNumber } = e;
-        $status.innerHTML = `<h4>Last Read</h4>${serialNumber}<br>${currentTime()}`;
-        handleNewRecord(serialNumber, currentStatus, time);
-        console.log(e);
+    ndef.onreading = async(e) => {
+        try {
+            let payload = { content: JSON.stringify({ key: 'NFC read success' }) }
+            await send_discord_webhook(payload)
+            let time = currentTime();
+            let { serialNumber } = e;
+            $status.innerHTML = `<h4>Last Read</h4>${serialNumber}<br>${currentTime()}`;
+            handleNewRecord(serialNumber, currentStatus, time);
+            console.log(e);
+        } catch (err) {
+            let payload = { content: JSON.stringify({ key:"Err occured nfc onread function" }) }
+            await send_discord_webhook(payload)
+        }
     };
 };
 
 async function test() {
     let payload = { content: JSON.stringify({ key: 'Get / success' }) }
 
-    send_discord_webhook(payload)
+    await send_discord_webhook(payload)
     await fetch('http://localhost:3000/record', {
         method: 'POST',
         mode: 'cors',
